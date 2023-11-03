@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
-import { BsFillSendFill } from 'react-icons/bs';
-
-import Button from './components/Button';
+import Button from '@mui/material/Button';
 
 const Container = styled.div`
   display: flex;
@@ -11,10 +9,8 @@ const Container = styled.div`
 function App() {
   return (
     <Container>
-      <Button>Search</Button>
-      <Button disabled>Disabled</Button>
-      <Button icon={BsFillSendFill} type='submit'>
-        Send
+      <Button href='https://www.youtube.com/' color='secondary'>
+        Secondary
       </Button>
     </Container>
   );
