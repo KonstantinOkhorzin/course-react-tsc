@@ -1,17 +1,15 @@
 import styled from '@emotion/styled';
-import Button from '@mui/material/Button';
+import Todos from './components/Todos';
 
 const Container = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 10px;
 `;
 
 function App() {
   return (
     <Container>
-      <Button href='https://www.youtube.com/' color='secondary'>
-        Secondary
-      </Button>
+      <Todos/>
     </Container>
   );
 }
