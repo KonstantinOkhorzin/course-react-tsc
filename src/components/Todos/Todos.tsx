@@ -7,6 +7,7 @@ import Filter from './Filter';
 import { Container } from './Todos.styled';
 
 import { ITodo } from '../types';
+import { Typography } from '@mui/material';
 
 interface ITodosState {
   todos: ITodo[];
@@ -55,12 +56,26 @@ class Todos extends Component {
     return todos.filter(todo => todo.text.toLowerCase().includes(normalizedFilter));
   };
 
+  calculateCompletedTodos = () => {
+    return this.state.todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
+  };
+
   render() {
     const { todos, filter } = this.state;
     const visibleTodos: ITodo[] = this.getVisibleTodos();
+    const totalTodoCount: number = todos.length;
+    const completedTodoCount: number = this.calculateCompletedTodos();
 
     return (
       <Container>
+        <div>
+          <Typography variant='h5' component='p'>
+            Total todos: {totalTodoCount}
+          </Typography>
+          <Typography variant='h5' component='p'>
+            Copleted: {completedTodoCount}
+          </Typography>
+        </div>
         {todos.length > 1 && <Filter filter={filter} onFilterChange={this.filterChange} />}
         <TodoList
           todos={visibleTodos}

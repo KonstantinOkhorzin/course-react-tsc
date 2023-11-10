@@ -9,7 +9,6 @@ export const Wrapper = styled.li<IWrapperProps>`
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 15px;
-  padding: 10px;
   border-radius: 4px;
   border: 1px #c4c4c4 solid;
   background-color: ${props => (props.completed ? props.theme.colors.muted : 'inherit')};
