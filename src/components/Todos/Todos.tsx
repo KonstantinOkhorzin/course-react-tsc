@@ -1,8 +1,10 @@
 import { Component, ChangeEvent } from 'react';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
 import Filter from './Filter';
+import Sort from './Sort';
 
 import { Container } from './Todos.styled';
 
@@ -12,12 +14,14 @@ import { Typography } from '@mui/material';
 interface ITodosState {
   todos: ITodo[];
   filter: string;
+  sort: '' | 'A-Z' | 'Z-A';
 }
 
 class Todos extends Component {
   state: ITodosState = {
     todos: [],
     filter: '',
+    sort: '',
   };
 
   addTodo = (text: string) => {
@@ -48,7 +52,7 @@ class Todos extends Component {
     this.setState({ filter: e.target.value });
   };
 
-  getVisibleTodos = () => {
+  filterTodos = () => {
     const { todos, filter } = this.state;
 
     const normalizedFilter: string = filter.toLowerCase();
@@ -60,9 +64,29 @@ class Todos extends Component {
     return this.state.todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
   };
 
+  selectChange = (e: SelectChangeEvent) => {
+    this.setState({ sort: e.target.value });
+  };
+
+  sortTodos = () => {
+    const { sort } = this.state;
+    const filteredTodos: ITodo[] = this.filterTodos();
+
+    switch (sort) {
+      case 'A-Z':
+        return [...filteredTodos].sort((a, b) => a.text.localeCompare(b.text));
+
+      case 'Z-A':
+        return [...filteredTodos].sort((a, b) => b.text.localeCompare(a.text));
+
+      default:
+        return filteredTodos;
+    }
+  };
+
   render() {
-    const { todos, filter } = this.state;
-    const visibleTodos: ITodo[] = this.getVisibleTodos();
+    const { todos, filter, sort } = this.state;
+    const visibleTodos: ITodo[] = this.sortTodos();
     const totalTodoCount: number = todos.length;
     const completedTodoCount: number = this.calculateCompletedTodos();
 
@@ -76,7 +100,12 @@ class Todos extends Component {
             Copleted: {completedTodoCount}
           </Typography>
         </div>
-        {todos.length > 1 && <Filter filter={filter} onFilterChange={this.filterChange} />}
+        {todos.length > 1 && (
+          <div>
+            <Filter filter={filter} onFilterChange={this.filterChange} />
+            <Sort sort={sort} onSelectChange={this.selectChange} />
+          </div>
+        )}
         <TodoList
           todos={visibleTodos}
           onDelete={this.deleteTodo}
