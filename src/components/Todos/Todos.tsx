@@ -8,7 +8,7 @@ import Sort from './Sort';
 
 import { Container } from './Todos.styled';
 
-import { ITodo } from '../types';
+import { ITodo } from '../../types';
 import { Typography } from '@mui/material';
 
 interface ITodosState {
@@ -23,6 +23,21 @@ class Todos extends Component {
     filter: '',
     sort: '',
   };
+
+  componentDidMount() {
+    const todos = localStorage.getItem('todos');
+
+    if (todos) {
+      const parsedTodos: ITodo = JSON.parse(todos);
+      this.setState({ todos: parsedTodos });
+    }
+  }
+
+  componentDidUpdate(_prevProps: unknown, prevState: ITodosState) {
+    if (this.state.todos !== prevState.todos) {
+      localStorage.setItem('todos', JSON.stringify(this.state.todos));
+    }
+  }
 
   addTodo = (text: string) => {
     const newTodo: ITodo = {

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import Todo from '../Todo';
-import { ITodo } from '../../types';
+import { ITodo } from '../../../types';
 
 import { List } from './TodoList.styled';
 
