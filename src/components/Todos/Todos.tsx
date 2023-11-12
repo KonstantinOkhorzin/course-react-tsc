@@ -1,10 +1,12 @@
 import { Component, ChangeEvent } from 'react';
-import { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent, IconButton } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
 import Filter from './Filter';
 import Sort from './Sort';
+import Modal from '../Modal';
 
 import { Container } from './Todos.styled';
 
@@ -15,6 +17,7 @@ interface ITodosState {
   todos: ITodo[];
   filter: string;
   sort: '' | 'A-Z' | 'Z-A';
+  showModal: boolean;
 }
 
 class Todos extends Component {
@@ -22,6 +25,7 @@ class Todos extends Component {
     todos: [],
     filter: '',
     sort: '',
+    showModal: false,
   };
 
   componentDidMount() {
@@ -39,6 +43,10 @@ class Todos extends Component {
     }
   }
 
+  onToggleModal = () => {
+    this.setState(({ showModal }: ITodosState) => ({ showModal: !showModal }));
+  };
+
   addTodo = (text: string) => {
     const newTodo: ITodo = {
       id: String(Date.now()),
@@ -47,6 +55,8 @@ class Todos extends Component {
     };
 
     this.setState((prevState: ITodosState) => ({ todos: [...prevState.todos, newTodo] }));
+
+    this.onToggleModal();
   };
 
   deleteTodo = (id: string) => {
@@ -100,7 +110,7 @@ class Todos extends Component {
   };
 
   render() {
-    const { todos, filter, sort } = this.state;
+    const { todos, filter, sort, showModal } = this.state;
     const visibleTodos: ITodo[] = this.sortTodos();
     const totalTodoCount: number = todos.length;
     const completedTodoCount: number = this.calculateCompletedTodos();
@@ -126,7 +136,24 @@ class Todos extends Component {
           onDelete={this.deleteTodo}
           onToggleCompleted={this.toggleCompleted}
         />
-        <AddForm addTodo={this.addTodo} />
+        <IconButton
+          onClick={this.onToggleModal}
+          color='primary'
+          aria-label='create todo'
+          sx={{ position: 'fixed', bottom: '50px', right: '50px', width: '70px', height: '70px' }}
+        >
+          <AddCircleIcon
+            sx={{
+              width: '50px',
+              height: '50px',
+            }}
+          />
+        </IconButton>
+        {showModal && (
+          <Modal onToggleModal={this.onToggleModal}>
+            <AddForm addTodo={this.addTodo} />
+          </Modal>
+        )}
       </Container>
     );
   }
