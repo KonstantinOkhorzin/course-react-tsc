@@ -1,6 +1,7 @@
 import { Component, ReactElement, MouseEvent } from 'react';
 import { IconButton } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { createPortal } from 'react-dom';
 
 import { Backdrop, Content } from './Modal.styled';
 
@@ -12,6 +13,8 @@ interface IModalProps {
 interface KeyboardEvent {
   code: string;
 }
+
+const modalRoot = document.querySelector('#modal-root')!;
 
 class Modal extends Component<IModalProps> {
   componentDidMount() {
@@ -36,7 +39,7 @@ class Modal extends Component<IModalProps> {
 
   render() {
     const { children, onToggleModal } = this.props;
-    return (
+    return createPortal(
       <Backdrop onClick={this.onBackdropClick}>
         <Content>
           <IconButton
@@ -48,7 +51,8 @@ class Modal extends Component<IModalProps> {
           </IconButton>
           {children}
         </Content>
-      </Backdrop>
+      </Backdrop>,
+      modalRoot
     );
   }
 }
