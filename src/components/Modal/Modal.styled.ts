@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import IconButton from '../IconButton';
+
 export const Backdrop = styled.div`
   position: fixed;
   top: 0;
@@ -19,4 +21,10 @@ export const Content = styled.div`
   padding: 15px;
   background-color: #fff;
   border-radius: 5px;
+`;
+
+export const CloseButton = styled(IconButton)`
+  position: absolute;
+  top: -32px;
+  right: -32px;
 `;

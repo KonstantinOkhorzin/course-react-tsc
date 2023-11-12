@@ -1,9 +1,8 @@
 import { Component, ReactElement, MouseEvent } from 'react';
-import { IconButton } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { createPortal } from 'react-dom';
 
-import { Backdrop, Content } from './Modal.styled';
+import CloseIcon from '../../icons/close.svg?react';
+import { Backdrop, Content, CloseButton } from './Modal.styled';
 
 interface IModalProps {
   children: ReactElement;
@@ -42,13 +41,9 @@ class Modal extends Component<IModalProps> {
     return createPortal(
       <Backdrop onClick={this.onBackdropClick}>
         <Content>
-          <IconButton
-            aria-label='close modal'
-            onClick={onToggleModal}
-            sx={{ position: 'absolute', top: '-24px', right: '-24px' }}
-          >
-            <HighlightOffIcon />
-          </IconButton>
+          <CloseButton aria-label='close modal' onClick={onToggleModal}>
+            <CloseIcon width='20px' height='20px' />
+          </CloseButton>
           {children}
         </Content>
       </Backdrop>,
