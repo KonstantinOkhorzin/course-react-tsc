@@ -1,37 +1,27 @@
-import { Component } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { Wrapper } from './Clock.styled';
 
-interface IClockState {
-  time: Date;
-}
+const Clock = () => {
+  const [time, setTime] = useState<Date>(() => new Date());
 
-class Clock extends Component {
-  state: IClockState = {
-    time: new Date(),
-  };
+  const intervalId = useRef<number | null>(null);
 
-  intervalId: number | null = null;
+  useEffect(() => {
+    intervalId.current = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    
+    return () => {
+      if (intervalId.current) clearInterval(intervalId.current);
+    };
+  }, []);
 
-  componentDidMount() {
-    this.intervalId = setInterval(() => this.setState({ time: new Date() }), 1000);
-  }
-
-  componentWillUnmount() {
-    if (this.intervalId !== null) {
-      clearInterval(this.intervalId);
-    }
-  }
-
-  render() {
-    const { time } = this.state;
-
-    return (
-      <Wrapper>
-        <p>Current time: {time.toLocaleTimeString()}</p>
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper>
+      <p>Current time: {time.toLocaleTimeString()}</p>
+    </Wrapper>
+  );
+};
 
 export default Clock;

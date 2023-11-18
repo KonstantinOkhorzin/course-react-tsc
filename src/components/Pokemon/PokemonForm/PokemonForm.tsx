@@ -1,46 +1,36 @@
-import { Component, FormEventHandler, ChangeEventHandler } from 'react';
+import { useState, FormEventHandler, ChangeEventHandler, FC } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 
 interface IPokemonFormProps {
   getPokemonName: (name: string) => void;
 }
 
-interface IPokemonFormState {
-  query: string;
-}
+const PokemonForm: FC<IPokemonFormProps> = ({ getPokemonName }) => {
+  const [query, setQuery] = useState<string>('');
 
-class PokemonForm extends Component<IPokemonFormProps, IPokemonFormState> {
-  state = {
-    query: '',
-  };
-
-  onFormSubmit: FormEventHandler<HTMLFormElement> = e => {
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    this.props.getPokemonName(this.state.query.toLocaleLowerCase());
-    this.setState({ query: '' });
+    getPokemonName(query.toLocaleLowerCase());
+    setQuery('');
   };
 
-  onInputChange: ChangeEventHandler<HTMLInputElement> = e => {
-    this.setState({ query: e.target.value.trimStart() });
+  const onInputChange: ChangeEventHandler<HTMLInputElement> = e => {
+    setQuery(e.target.value.trimStart());
   };
 
-  render() {
-    const { query } = this.state;
-
-    return (
-      <Box component='form' sx={{ display: 'flex' }} onSubmit={this.onFormSubmit}>
-        <TextField
-          placeholder='Enter pokemon name'
-          type='search'
-          value={query}
-          onChange={this.onInputChange}
-        />
-        <Button variant='contained' disabled={query === ''} type='submit'>
-          Search
-        </Button>
-      </Box>
-    );
-  }
-}
+  return (
+    <Box component='form' sx={{ display: 'flex' }} onSubmit={onFormSubmit}>
+      <TextField
+        placeholder='Enter pokemon name'
+        type='search'
+        value={query}
+        onChange={onInputChange}
+      />
+      <Button variant='contained' disabled={query === ''} type='submit'>
+        Search
+      </Button>
+    </Box>
+  );
+};
 
 export default PokemonForm;

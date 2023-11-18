@@ -1,4 +1,4 @@
-import { Component, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { SelectChangeEvent, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -13,150 +13,129 @@ import { Container } from './Todos.styled';
 import { ITodo } from '../../types';
 import { Typography } from '@mui/material';
 
-interface ITodosState {
-  todos: ITodo[];
-  filter: string;
-  sort: '' | 'A-Z' | 'Z-A';
-  showModal: boolean;
-}
+const Todos = () => {
+  // const [todos, setTodos] = useState<ITodo[]>(() => {
+  //   const localTodos = localStorage.getItem('todos');
+  //   return localTodos ? JSON.parse(localTodos) : [];
+  // });
+  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [filter, setFilter] = useState<string>('');
+  const [sort, setSort] = useState<string>('');
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-class Todos extends Component {
-  state: ITodosState = {
-    todos: [],
-    filter: '',
-    sort: '',
-    showModal: false,
+  // useEffect(() => {
+  //   window.localStorage.setItem('todos', JSON.stringify(todos));
+  // }, [todos]);
+
+  useEffect(() => {
+    const localTodos = window.localStorage.getItem('todos');
+    if (localTodos) setTodos(JSON.parse(localTodos));
+  }, []);
+
+  useEffect(() => {
+    if (!todos.length) return;
+
+    window.localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
+  const onToggleModal = () => {
+    setShowModal(state => !state);
   };
 
-  componentDidMount() {
-    const todos = localStorage.getItem('todos');
-
-    if (todos) {
-      const parsedTodos: ITodo = JSON.parse(todos);
-      this.setState({ todos: parsedTodos });
-    }
-  }
-
-  componentDidUpdate(_prevProps: unknown, prevState: ITodosState) {
-    if (this.state.todos !== prevState.todos) {
-      localStorage.setItem('todos', JSON.stringify(this.state.todos));
-    }
-  }
-
-  onToggleModal = () => {
-    this.setState(({ showModal }: ITodosState) => ({ showModal: !showModal }));
-  };
-
-  addTodo = (text: string) => {
+  const addTodo = (text: string) => {
     const newTodo: ITodo = {
       id: String(Date.now()),
       text,
       completed: false,
     };
 
-    this.setState((prevState: ITodosState) => ({ todos: [...prevState.todos, newTodo] }));
+    setTodos(todos => [...todos, newTodo]);
 
-    this.onToggleModal();
+    onToggleModal();
   };
 
-  deleteTodo = (id: string) => {
-    this.setState((prevState: ITodosState) => ({
-      todos: prevState.todos.filter(todo => todo.id !== id),
-    }));
+  const deleteTodo = (id: string) => {
+    setTodos(todos => todos.filter(todo => todo.id !== id));
   };
 
-  toggleCompleted = (id: string) => {
-    this.setState((prevState: ITodosState) => ({
-      todos: prevState.todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      ),
-    }));
+  const toggleCompleted = (id: string) => {
+    setTodos(todos =>
+      todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+    );
   };
 
-  filterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ filter: e.target.value });
+  const filterChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.target.value);
   };
 
-  filterTodos = () => {
-    const { todos, filter } = this.state;
-
+  const filterTodos = (todos: ITodo[], filter: string) => {
     const normalizedFilter: string = filter.toLowerCase();
 
     return todos.filter(todo => todo.text.toLowerCase().includes(normalizedFilter));
   };
 
-  calculateCompletedTodos = () => {
-    return this.state.todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
+  const calculateCompletedTodos = (todos: ITodo[]) =>
+    todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
+
+  const selectChange = (e: SelectChangeEvent) => {
+    setSort(e.target.value);
   };
 
-  selectChange = (e: SelectChangeEvent) => {
-    this.setState({ sort: e.target.value });
-  };
-
-  sortTodos = () => {
-    const { sort } = this.state;
-    const filteredTodos: ITodo[] = this.filterTodos();
-
+  const sortTodos = (todos: ITodo[], sort: string) => {
     switch (sort) {
       case 'A-Z':
-        return [...filteredTodos].sort((a, b) => a.text.localeCompare(b.text));
+        return [...todos].sort((a, b) => a.text.localeCompare(b.text));
 
       case 'Z-A':
-        return [...filteredTodos].sort((a, b) => b.text.localeCompare(a.text));
+        return [...todos].sort((a, b) => b.text.localeCompare(a.text));
 
       default:
-        return filteredTodos;
+        return todos;
     }
   };
 
-  render() {
-    const { todos, filter, sort, showModal } = this.state;
-    const visibleTodos: ITodo[] = this.sortTodos();
-    const totalTodoCount: number = todos.length;
-    const completedTodoCount: number = this.calculateCompletedTodos();
+  const filteredTodos: ITodo[] = filterTodos(todos, filter);
+  const visibleTodos: ITodo[] = sortTodos(filteredTodos, sort);
+  const totalTodoCount: number = todos.length;
+  const completedTodoCount: number = calculateCompletedTodos(todos);
 
-    return (
-      <Container>
+  return (
+    <Container>
+      <div>
+        <Typography variant='h5' component='p'>
+          Total todos: {totalTodoCount}
+        </Typography>
+        <Typography variant='h5' component='p'>
+          Copleted: {completedTodoCount}
+        </Typography>
+      </div>
+      {todos.length > 1 && (
         <div>
-          <Typography variant='h5' component='p'>
-            Total todos: {totalTodoCount}
-          </Typography>
-          <Typography variant='h5' component='p'>
-            Copleted: {completedTodoCount}
-          </Typography>
+          <Filter filter={filter} onFilterChange={filterChange} />
+          <Sort sort={sort} onSelectChange={selectChange} />
         </div>
-        {todos.length > 1 && (
-          <div>
-            <Filter filter={filter} onFilterChange={this.filterChange} />
-            <Sort sort={sort} onSelectChange={this.selectChange} />
-          </div>
-        )}
-        <TodoList
-          todos={visibleTodos}
-          onDelete={this.deleteTodo}
-          onToggleCompleted={this.toggleCompleted}
+      )}
+      <TodoList todos={visibleTodos} onDelete={deleteTodo} onToggleCompleted={toggleCompleted} />
+      <IconButton
+        onClick={onToggleModal}
+        color='primary'
+        aria-label='create todo'
+        sx={{ position: 'fixed', bottom: '50px', right: '50px', width: '70px', height: '70px' }}
+      >
+        <AddCircleIcon
+          sx={{
+            width: '50px',
+            height: '50px',
+          }}
         />
-        <IconButton
-          onClick={this.onToggleModal}
-          color='primary'
-          aria-label='create todo'
-          sx={{ position: 'fixed', bottom: '50px', right: '50px', width: '70px', height: '70px' }}
-        >
-          <AddCircleIcon
-            sx={{
-              width: '50px',
-              height: '50px',
-            }}
-          />
-        </IconButton>
-        {showModal && (
-          <Modal onToggleModal={this.onToggleModal}>
-            <AddForm addTodo={this.addTodo} />
-          </Modal>
-        )}
-      </Container>
-    );
-  }
-}
+      </IconButton>
+      {showModal && (
+        <Modal onToggleModal={onToggleModal}>
+          <AddForm addTodo={addTodo} />
+        </Modal>
+      )}
+    </Container>
+  );
+};
 
 export default Todos;
