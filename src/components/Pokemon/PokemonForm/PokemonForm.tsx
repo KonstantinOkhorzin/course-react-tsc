@@ -2,15 +2,15 @@ import { useState, FormEventHandler, ChangeEventHandler, FC } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 
 interface IPokemonFormProps {
-  getPokemonName: (name: string) => void;
+  setPokemonName: (name: string) => void;
 }
 
-const PokemonForm: FC<IPokemonFormProps> = ({ getPokemonName }) => {
+const PokemonForm: FC<IPokemonFormProps> = ({ setPokemonName }) => {
   const [query, setQuery] = useState<string>('');
 
   const onFormSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    getPokemonName(query.toLocaleLowerCase());
+    setPokemonName(query.toLocaleLowerCase());
     setQuery('');
   };
 

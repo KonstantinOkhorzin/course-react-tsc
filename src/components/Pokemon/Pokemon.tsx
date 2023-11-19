@@ -7,13 +7,9 @@ import { Wrapper } from './Pokemon.styled';
 const Pokemon = () => {
   const [pokemonName, setPokemonName] = useState<string>('');
 
-  const getPokemonName = (name: string) => {
-    setPokemonName(name);
-  };
-
   return (
     <Wrapper>
-      <PokemonForm getPokemonName={getPokemonName} />
+      <PokemonForm setPokemonName={setPokemonName} />
       <PokemonInfo pokemonName={pokemonName} />
     </Wrapper>
   );
