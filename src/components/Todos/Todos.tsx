@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useMemo } from 'react';
 import { SelectChangeEvent, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -68,11 +68,11 @@ const Todos = () => {
     setFilter(e.target.value);
   };
 
-  const filterTodos = (todos: ITodo[], filter: string) => {
+  const filteredTodos = useMemo(() => {
     const normalizedFilter: string = filter.toLowerCase();
 
     return todos.filter(todo => todo.text.toLowerCase().includes(normalizedFilter));
-  };
+  }, [filter, todos]);
 
   const calculateCompletedTodos = (todos: ITodo[]) =>
     todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
@@ -81,21 +81,19 @@ const Todos = () => {
     setSort(e.target.value);
   };
 
-  const sortTodos = (todos: ITodo[], sort: string) => {
+  const visibleTodos = useMemo(() => {
     switch (sort) {
       case 'A-Z':
-        return [...todos].sort((a, b) => a.text.localeCompare(b.text));
+        return [...filteredTodos].sort((a, b) => a.text.localeCompare(b.text));
 
       case 'Z-A':
-        return [...todos].sort((a, b) => b.text.localeCompare(a.text));
+        return [...filteredTodos].sort((a, b) => b.text.localeCompare(a.text));
 
       default:
-        return todos;
+        return filteredTodos;
     }
-  };
+  }, [filteredTodos, sort]);
 
-  const filteredTodos: ITodo[] = filterTodos(todos, filter);
-  const visibleTodos: ITodo[] = sortTodos(filteredTodos, sort);
   const totalTodoCount: number = todos.length;
   const completedTodoCount: number = calculateCompletedTodos(todos);
 
