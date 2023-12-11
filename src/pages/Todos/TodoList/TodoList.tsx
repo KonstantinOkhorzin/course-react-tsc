@@ -14,13 +14,12 @@ interface ITodoListProps {
 const TodoList: FC<ITodoListProps> = ({ todos, onDelete, onToggleCompleted }) => {
   return (
     <List>
-      {todos.map(({ id, text, completed }) => (
+      {todos.map(todo => (
         <Todo
-          key={id}
-          text={text}
-          completed={completed}
-          onDelete={() => onDelete(id)}
-          onToggleCompleted={() => onToggleCompleted(id)}
+          key={todo.id}
+          {...todo}
+          onDelete={onDelete}
+          onToggleCompleted={onToggleCompleted}
         />
       ))}
     </List>

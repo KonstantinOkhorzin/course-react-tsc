@@ -6,7 +6,7 @@ import AddForm from './AddForm';
 import TodoList from './TodoList';
 import Filter from './Filter';
 import Sort from './Sort';
-import Modal from '../Modal';
+import Modal from '../../components/Modal';
 
 import { Container } from './Todos.styled';
 
@@ -14,27 +14,15 @@ import { ITodo } from '../../types';
 import { Typography } from '@mui/material';
 
 const Todos = () => {
-  // const [todos, setTodos] = useState<ITodo[]>(() => {
-  //   const localTodos = localStorage.getItem('todos');
-  //   return localTodos ? JSON.parse(localTodos) : [];
-  // });
-  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [todos, setTodos] = useState<ITodo[]>(() => {
+    const localTodos = localStorage.getItem('todos');
+    return localTodos ? JSON.parse(localTodos) : [];
+  });
   const [filter, setFilter] = useState<string>('');
   const [sort, setSort] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   window.localStorage.setItem('todos', JSON.stringify(todos));
-  // }, [todos]);
-
   useEffect(() => {
-    const localTodos = window.localStorage.getItem('todos');
-    if (localTodos) setTodos(JSON.parse(localTodos));
-  }, []);
-
-  useEffect(() => {
-    if (!todos.length) return;
-
     window.localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 

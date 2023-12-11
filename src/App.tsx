@@ -1,19 +1,23 @@
-import styled from '@emotion/styled';
-import Pokemon from './components/Pokemon';
+import { Routes, Route } from 'react-router-dom';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding-top: 15px;
-`;
+import Layout from './layout';
+import Home from './pages/Home';
+import Pokemon from './pages/Pokemon';
+import Todos from './pages/Todos';
+import Clock from './pages/Clock';
+import SingleTodo from './pages/SingleTodo';
 
 function App() {
   return (
-    <Container>
-      <Pokemon />
-    </Container>
+    <Routes>
+      <Route path='/' element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path='pokemon' element={<Pokemon />} />
+        <Route path='clock' element={<Clock />} />
+        <Route path='todos' element={<Todos />} />
+        <Route path='todos/:todoId' element={<SingleTodo />} />
+      </Route>
+    </Routes>
   );
 }
 
