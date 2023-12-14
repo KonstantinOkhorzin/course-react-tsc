@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, useEffect, useMemo } from 'react';
 import { SelectChangeEvent, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useSearchParams } from 'react-router-dom';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
@@ -18,9 +19,12 @@ const Todos = () => {
     const localTodos = localStorage.getItem('todos');
     return localTodos ? JSON.parse(localTodos) : [];
   });
-  const [filter, setFilter] = useState<string>('');
-  const [sort, setSort] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const filter = searchParams.get('filter') ?? '';
+  // const sort = searchParams.get('sort') ?? '';
+  const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
+  const { filter = '', sort = '' } = params;
 
   useEffect(() => {
     window.localStorage.setItem('todos', JSON.stringify(todos));
@@ -53,7 +57,27 @@ const Todos = () => {
   };
 
   const filterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilter(e.target.value);
+    const filterText = e.target.value;
+    const params = Object.fromEntries([...searchParams]);
+
+    if (filterText === '') {
+      delete params.filter;
+    } else {
+      params.filter = filterText;
+    }
+
+    setSearchParams(params);
+    // OR
+    //const filterText = e.target.value;
+    // const currentSearchParams = new URLSearchParams(searchParams);
+
+    // if (filterText === '') {
+    //   currentSearchParams.delete('filter');
+    // } else {
+    //   currentSearchParams.set('filter', filterText);
+    // }
+
+    // setSearchParams(currentSearchParams);
   };
 
   const filteredTodos = useMemo(() => {
@@ -66,7 +90,27 @@ const Todos = () => {
     todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
 
   const selectChange = (e: SelectChangeEvent) => {
-    setSort(e.target.value);
+    const sortValue = e.target.value;
+    const params = Object.fromEntries([...searchParams]);
+
+    if (sortValue === '') {
+      delete params.sort;
+    } else {
+      params.sort = sortValue;
+    }
+
+    setSearchParams(params);
+    // OR
+    // const sortValue = e.target.value;
+    // const currentSearchParams = new URLSearchParams(searchParams);
+
+    // if (sortValue === '') {
+    //   currentSearchParams.delete('sort');
+    // } else {
+    //   currentSearchParams.set('sort', sortValue);
+    // }
+
+    // setSearchParams(currentSearchParams);
   };
 
   const visibleTodos = useMemo(() => {
