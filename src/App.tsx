@@ -1,11 +1,12 @@
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Layout from './layout';
-import Home from './pages/Home';
-import Pokemon from './pages/Pokemon';
-import Todos from './pages/Todos';
-import Clock from './pages/Clock';
-import SingleTodo from './pages/SingleTodo';
+const Home = lazy(() => import('./pages/Home'));
+const Pokemon = lazy(() => import('./pages/Pokemon'));
+const Todos = lazy(() => import('./pages/Todos'));
+const Clock = lazy(() => import('./pages/Clock'));
+const SingleTodo = lazy(() => import('./pages/SingleTodo'));
 
 function App() {
   return (

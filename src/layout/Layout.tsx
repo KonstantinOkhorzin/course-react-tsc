@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import styled from '@emotion/styled';
 import { Outlet } from 'react-router-dom';
 
@@ -18,9 +19,11 @@ const Main = styled.main`
 const Layout = () => {
   return (
     <Wrapper>
-      <AppBar/>
+      <AppBar />
       <Main>
-        <Outlet />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
       </Main>
     </Wrapper>
   );
