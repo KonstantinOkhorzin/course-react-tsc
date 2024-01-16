@@ -1,7 +1,10 @@
-import { useState, ChangeEvent, useEffect, useMemo } from 'react';
-import { SelectChangeEvent, IconButton } from '@mui/material';
+import { useState, ChangeEvent, useMemo} from 'react';
+import { SelectChangeEvent, IconButton, Typography } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { selectTodos } from '../../redux/todos/slice';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
@@ -12,48 +15,16 @@ import Modal from '../../components/Modal';
 import { Container } from './Todos.styled';
 
 import { ITodo } from '../../types';
-import { Typography } from '@mui/material';
 
 const Todos = () => {
-  const [todos, setTodos] = useState<ITodo[]>(() => {
-    const localTodos = localStorage.getItem('todos');
-    return localTodos ? JSON.parse(localTodos) : [];
-  });
+  const todos = useSelector(selectTodos);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // const filter = searchParams.get('filter') ?? '';
-  // const sort = searchParams.get('sort') ?? '';
   const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
   const { filter = '', sort = '' } = params;
 
-  useEffect(() => {
-    window.localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
-
   const onToggleModal = () => {
     setShowModal(state => !state);
-  };
-
-  const addTodo = (text: string) => {
-    const newTodo: ITodo = {
-      id: String(Date.now()),
-      text,
-      completed: false,
-    };
-
-    setTodos(todos => [...todos, newTodo]);
-
-    onToggleModal();
-  };
-
-  const deleteTodo = (id: string) => {
-    setTodos(todos => todos.filter(todo => todo.id !== id));
-  };
-
-  const toggleCompleted = (id: string) => {
-    setTodos(todos =>
-      todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
-    );
   };
 
   const filterChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -67,17 +38,6 @@ const Todos = () => {
     }
 
     setSearchParams(params);
-    // OR
-    //const filterText = e.target.value;
-    // const currentSearchParams = new URLSearchParams(searchParams);
-
-    // if (filterText === '') {
-    //   currentSearchParams.delete('filter');
-    // } else {
-    //   currentSearchParams.set('filter', filterText);
-    // }
-
-    // setSearchParams(currentSearchParams);
   };
 
   const filteredTodos = useMemo(() => {
@@ -100,17 +60,6 @@ const Todos = () => {
     }
 
     setSearchParams(params);
-    // OR
-    // const sortValue = e.target.value;
-    // const currentSearchParams = new URLSearchParams(searchParams);
-
-    // if (sortValue === '') {
-    //   currentSearchParams.delete('sort');
-    // } else {
-    //   currentSearchParams.set('sort', sortValue);
-    // }
-
-    // setSearchParams(currentSearchParams);
   };
 
   const visibleTodos = useMemo(() => {
@@ -145,7 +94,7 @@ const Todos = () => {
           <Sort sort={sort} onSelectChange={selectChange} />
         </div>
       )}
-      <TodoList todos={visibleTodos} onDelete={deleteTodo} onToggleCompleted={toggleCompleted} />
+      <TodoList todos={visibleTodos} />
       <IconButton
         onClick={onToggleModal}
         color='primary'
@@ -161,7 +110,7 @@ const Todos = () => {
       </IconButton>
       {showModal && (
         <Modal onToggleModal={onToggleModal}>
-          <AddForm addTodo={addTodo} />
+          <AddForm onToggleModal={onToggleModal} />
         </Modal>
       )}
     </Container>

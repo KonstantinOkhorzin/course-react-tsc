@@ -4,9 +4,11 @@ import { ThemeProvider, Global } from '@emotion/react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import ContextProvider from './context';
+import { Provider } from 'react-redux';
 
 import App from './App.tsx';
 import { theme, globalStyles, muiTheme } from './styles';
+import store from './redux/store';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -14,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <MuiThemeProvider theme={muiTheme}>
         <BrowserRouter>
           <ContextProvider>
-            <App />
+            <Provider store={store}>
+              <App />
+            </Provider>
           </ContextProvider>
         </BrowserRouter>
       </MuiThemeProvider>

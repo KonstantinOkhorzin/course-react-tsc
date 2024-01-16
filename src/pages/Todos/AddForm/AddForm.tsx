@@ -1,17 +1,22 @@
-import { FC, useState, FormEvent, ChangeEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, FC } from 'react';
 import { TextField, Button, Box } from '@mui/material';
+import { useDispatch } from 'react-redux';
 
-interface IAddFormProps {
-  addTodo: (text: string) => void;
+import { addTodo } from '../../../redux/todos/slice';
+
+interface Props {
+  onToggleModal: () => void;
 }
 
-const AddForm: FC<IAddFormProps> = ({ addTodo }) => {
+const AddForm: FC<Props> = ({ onToggleModal }) => {
   const [text, setText] = useState<string>('');
+  const dispatch = useDispatch();
 
   const onFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    addTodo(text);
+    dispatch(addTodo(text));
     setText('');
+    onToggleModal();
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {

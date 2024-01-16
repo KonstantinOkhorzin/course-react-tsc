@@ -7,19 +7,15 @@ import { List } from './TodoList.styled';
 
 interface ITodoListProps {
   todos: ITodo[];
-  onDelete: (id: string) => void;
-  onToggleCompleted: (id: string) => void;
 }
 
-const TodoList: FC<ITodoListProps> = ({ todos, onDelete, onToggleCompleted }) => {
+const TodoList: FC<ITodoListProps> = ({ todos}) => {
   return (
     <List>
       {todos.map(todo => (
         <Todo
           key={todo.id}
           {...todo}
-          onDelete={onDelete}
-          onToggleCompleted={onToggleCompleted}
         />
       ))}
     </List>
