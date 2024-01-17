@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { Status } from '../../../types';
 import PokemonDataView from '../PokemonDataView';
-import { fetchPokemonByName } from '../../../redux/pokemon/operations';
+import { fetchPokemonByName } from '../../../redux/pokemon/slice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { selectPokemon } from '../../../redux/pokemon/slice';
 
