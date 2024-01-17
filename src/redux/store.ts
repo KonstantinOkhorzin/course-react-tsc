@@ -1,7 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import todos from './todos/slice';
+import pokemon from './pokemon/slice';
 
-export default configureStore({
-  reducer: { todos },
+const store = configureStore({
+  reducer: { todos, pokemon },
 });
+
+export type AppDispatch = typeof store.dispatch;
+
+export default store;

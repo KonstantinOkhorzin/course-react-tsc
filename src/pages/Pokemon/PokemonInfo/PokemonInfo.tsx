@@ -1,36 +1,26 @@
-import { FC, useState, useEffect, useContext } from 'react';
+import { FC, useEffect } from 'react';
 import { Typography, CircularProgress, Box } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 import { Status } from '../../../types';
-import pokemonApi from '../../../services/pokemon-api';
 import PokemonDataView from '../PokemonDataView';
-import { Context, IContext } from '../../../context';
+import { fetchPokemonByName } from '../../../redux/pokemon/operations';
+import { useAppDispatch } from '../../../redux/hooks';
+import { selectPokemon } from '../../../redux/pokemon/slice';
 
 interface IPokemonInfoProps {
   pokemonName: string;
 }
 
 const PokemonInfo: FC<IPokemonInfoProps> = ({ pokemonName }) => {
-  const { pokemon, setPokemon } = useContext(Context) as IContext;
-  const [status, setStatus] = useState<Status>(Status.IDLE);
-  const [error, setError] = useState<string>('');
+  const { pokemon, error, status } = useSelector(selectPokemon);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (pokemonName === '') return;
 
-    setStatus(Status.PENDING);
-
-    pokemonApi
-      .fetchPokemon(pokemonName)
-      .then(pokemon => {
-        setPokemon(pokemon);
-        setStatus(Status.RESOLVED);
-      })
-      .catch(error => {
-        setError(error);
-        setStatus(Status.REJECTED);
-      });
-  }, [pokemonName, setPokemon]);
+    dispatch(fetchPokemonByName(pokemonName));
+  }, [dispatch, pokemonName]);
 
   switch (status) {
     case Status.IDLE:

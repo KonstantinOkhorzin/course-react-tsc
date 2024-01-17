@@ -1,6 +1,6 @@
 import { IPokemon } from '../types';
 
-const fetchPokemon = (name: string): Promise<IPokemon> => {
+export const fetchPokemon = (name: string): Promise<IPokemon> => {
   return fetch(`https://pokeapi.co/api/v2/pokemon/${name}`).then(response => {
     if (response.ok) {
       return response.json().then(data => {
@@ -15,8 +15,3 @@ const fetchPokemon = (name: string): Promise<IPokemon> => {
   });
 };
 
-const api = {
-  fetchPokemon,
-};
-
-export default api;
