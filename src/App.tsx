@@ -7,6 +7,7 @@ const Pokemon = lazy(() => import('./pages/Pokemon'));
 const Todos = lazy(() => import('./pages/Todos'));
 const Clock = lazy(() => import('./pages/Clock'));
 const SingleTodo = lazy(() => import('./pages/SingleTodo'));
+const Products = lazy(() => import('./pages/Products'));
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='clock' element={<Clock />} />
         <Route path='todos' element={<Todos />} />
         <Route path='todos/:todoId' element={<SingleTodo />} />
+        <Route path='products' element={<Products />} />
       </Route>
     </Routes>
   );

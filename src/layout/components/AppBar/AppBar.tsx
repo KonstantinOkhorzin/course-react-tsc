@@ -9,6 +9,7 @@ const pages = [
   { name: 'pokemon', path: '/pokemon' },
   { name: 'clock', path: '/clock' },
   { name: 'todos', path: '/todos' },
+  { name: 'products', path: '/products' },
 ];
 
 const ResponsiveAppBar = () => {
