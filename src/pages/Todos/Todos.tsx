@@ -109,8 +109,8 @@ const Todos = () => {
         />
       </IconButton>
       {showModal && (
-        <Modal onToggleModal={onToggleModal}>
-          <AddForm onToggleModal={onToggleModal} />
+        <Modal onCloseModal={onToggleModal}>
+          <AddForm onCloseModal={onToggleModal} />
         </Modal>
       )}
     </Container>

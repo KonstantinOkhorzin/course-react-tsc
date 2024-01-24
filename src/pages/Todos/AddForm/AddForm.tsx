@@ -5,10 +5,10 @@ import { useDispatch } from 'react-redux';
 import { addTodo } from '../../../redux/todos/slice';
 
 interface Props {
-  onToggleModal: () => void;
+  onCloseModal: () => void;
 }
 
-const AddForm: FC<Props> = ({ onToggleModal }) => {
+const AddForm: FC<Props> = ({ onCloseModal }) => {
   const [text, setText] = useState<string>('');
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const AddForm: FC<Props> = ({ onToggleModal }) => {
     e.preventDefault();
     dispatch(addTodo(text));
     setText('');
-    onToggleModal();
+    onCloseModal();
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {

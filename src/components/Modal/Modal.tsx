@@ -6,7 +6,7 @@ import { Backdrop, Content, CloseButton } from './Modal.styled';
 
 interface IModalProps {
   children: ReactElement;
-  onToggleModal: () => void;
+  onCloseModal: () => void;
 }
 
 interface KeyboardEvent {
@@ -15,11 +15,11 @@ interface KeyboardEvent {
 
 const modalRoot = document.querySelector('#modal-root')!;
 
-const Modal: FC<IModalProps> = ({ children, onToggleModal }) => {
+const Modal: FC<IModalProps> = ({ children, onCloseModal }) => {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
-        onToggleModal();
+        onCloseModal();
       }
     };
 
@@ -28,18 +28,18 @@ const Modal: FC<IModalProps> = ({ children, onToggleModal }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [onToggleModal]);
+  }, [onCloseModal]);
 
   const onBackdropClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onToggleModal();
+      onCloseModal();
     }
   };
 
   return createPortal(
     <Backdrop onClick={onBackdropClick}>
       <Content>
-        <CloseButton aria-label='close modal' onClick={onToggleModal}>
+        <CloseButton aria-label='close modal' onClick={onCloseModal}>
           <CloseIcon width='20px' height='20px' />
         </CloseButton>
         {children}
