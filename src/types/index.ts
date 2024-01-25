@@ -16,6 +16,18 @@ interface Stat {
   stat: { name: string; url: string };
 }
 
+export interface IPokemonApiResponse {
+  name: string;
+  sprites: {
+    other: {
+      'official-artwork': {
+        front_default: string;
+      };
+    };
+  };
+  stats: Stat[];
+}
+
 export enum Status {
   IDLE = 'idle',
   PENDING = 'pending',

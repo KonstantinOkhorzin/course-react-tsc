@@ -1,16 +1,16 @@
-import { useState, FormEventHandler, ChangeEventHandler, FC } from 'react';
+import { useState, FormEventHandler, ChangeEventHandler } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 
-interface IPokemonFormProps {
-  setPokemonName: (name: string) => void;
-}
+import { setPokemonName } from '../../../redux/pokemon/slice';
+import { useAppDispatch } from '../../../redux/hooks';
 
-const PokemonForm: FC<IPokemonFormProps> = ({ setPokemonName }) => {
+const PokemonForm = () => {
   const [query, setQuery] = useState<string>('');
+  const dispatch = useAppDispatch();
 
   const onFormSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    setPokemonName(query.toLocaleLowerCase());
+    dispatch(setPokemonName(query.toLocaleLowerCase()));
     setQuery('');
   };
 

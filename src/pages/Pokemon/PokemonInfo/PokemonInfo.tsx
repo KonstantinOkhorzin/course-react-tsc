@@ -1,55 +1,40 @@
-import { FC, useEffect } from 'react';
 import { Typography, CircularProgress, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-import { Status } from '../../../types';
 import PokemonDataView from '../PokemonDataView';
-import { fetchPokemonByName } from '../../../redux/pokemon/slice';
-import { useAppDispatch } from '../../../redux/hooks';
-import { selectPokemon } from '../../../redux/pokemon/slice';
+import { useGetPokemonByNameQuery } from '../../../redux/pokemon/api';
+import { errorHandler } from '../../../redux/helpers';
+import { selectPokemonName } from '../../../redux/pokemon/slice';
 
-interface IPokemonInfoProps {
-  pokemonName: string;
-}
+const PokemonInfo = () => {
+  const pokemonName = useSelector(selectPokemonName);
+  const {
+    currentData: pokemon,
+    error,
+    isUninitialized,
+    isFetching,
+    isSuccess,
+    isError,
+  } = useGetPokemonByNameQuery(pokemonName, {
+    skip: pokemonName === '',
+  });
 
-const PokemonInfo: FC<IPokemonInfoProps> = ({ pokemonName }) => {
-  const { pokemon, error, status } = useSelector(selectPokemon);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (pokemonName === '') return;
-
-    dispatch(fetchPokemonByName(pokemonName));
-  }, [dispatch, pokemonName]);
-
-  switch (status) {
-    case Status.IDLE:
-      return pokemon ? (
-        <PokemonDataView pokemon={pokemon} />
-      ) : (
-        <Typography variant='h4'>Enter pokemon name</Typography>
-      );
-
-    case Status.PENDING:
-      return (
+  return (
+    <>
+      {isUninitialized && <Typography variant='h4'>Enter pokemon name</Typography>}{' '}
+      {isFetching && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />
         </Box>
-      );
-
-    case Status.RESOLVED:
-      return pokemon ? <PokemonDataView pokemon={pokemon} /> : null;
-
-    case Status.REJECTED:
-      return (
-        <Typography variant='h5' color='error'>
-          {error}
+      )}
+      {isSuccess && pokemon && <PokemonDataView pokemon={pokemon} />}
+      {isError && (
+        <Typography variant='h5' color='error' textAlign='center'>
+          {errorHandler(error)}
         </Typography>
-      );
-
-    default:
-      return null;
-  }
+      )}
+    </>
+  );
 };
 
 export default PokemonInfo;

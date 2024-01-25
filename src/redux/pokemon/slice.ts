@@ -1,60 +1,27 @@
-import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
-
-import { IPokemon, Status } from '../../types';
-import { fetchPokemon } from '../../services/pokemon-api';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface InitialState {
-  pokemon: IPokemon | null;
-  status: Status;
-  error: string | null;
+  pokemonName: string;
 }
 
 const initialState: InitialState = {
-  pokemon: null,
-  status: Status.IDLE,
-  error: null,
+  pokemonName: '',
 };
 
-const createPokemonSlice = buildCreateSlice({
-  creators: { asyncThunk: asyncThunkCreator },
-});
-
-const pokemonSlice = createPokemonSlice({
+const pokemonSlice = createSlice({
   name: 'pokemon',
   initialState,
-  reducers: create => ({
-    fetchPokemonByName: create.asyncThunk(
-      async (name: string, thunkApi) => {
-        try {
-          return (await fetchPokemon(name));
-        } catch (error) {
-          return thunkApi.rejectWithValue(error);
-        }
-      },
-      {
-        pending: state => {
-          state.status = Status.PENDING;
-        },
-        rejected: (state, { payload }) => {
-          if (typeof payload === 'string') {
-            state.error = payload;
-          }
-          state.status = Status.REJECTED;
-        },
-        fulfilled: (state, action) => {
-          state.pokemon = action.payload;
-          state.status = Status.RESOLVED;
-          state.error = null;
-        },
-      }
-    ),
-  }),
+  reducers: {
+    setPokemonName: (state, action: PayloadAction<string>) => {
+      state.pokemonName = action.payload;
+    },
+  },
   selectors: {
-    selectPokemon: state => state,
+    selectPokemonName: state => state.pokemonName,
   },
 });
 
-export const { fetchPokemonByName } = pokemonSlice.actions;
-export const { selectPokemon } = pokemonSlice.selectors;
+export const { setPokemonName } = pokemonSlice.actions;
+export const { selectPokemonName } = pokemonSlice.selectors;
 
 export default pokemonSlice.reducer;
