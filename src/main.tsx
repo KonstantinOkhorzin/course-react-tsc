@@ -11,7 +11,7 @@ import { theme, globalStyles, muiTheme } from './styles';
 import store from './redux/store';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
- <React.StrictMode>
+  <React.StrictMode>
     <ThemeProvider theme={theme}>
       <MuiThemeProvider theme={muiTheme}>
         <BrowserRouter>
