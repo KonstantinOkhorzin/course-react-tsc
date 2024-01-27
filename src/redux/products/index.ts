@@ -12,18 +12,24 @@ const productsApi = createApi({
   endpoints: builder => ({
     getProducts: builder.query<IProduct[], void>({
       query: () => PRODUCTS_PATH,
-      providesTags: [PRODUCTS_TAG],
+      providesTags: result =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Products' as const, id })),
+              { type: PRODUCTS_TAG, id: 'LIST' },
+            ]
+          : [{ type: PRODUCTS_TAG, id: 'LIST' }],
     }),
     getProductById: builder.query<IProduct, string | undefined>({
       query: id => `${PRODUCTS_PATH}/${id}`,
-      providesTags: [PRODUCTS_TAG],
+      providesTags: (_result, _error, arg) => [{ type: PRODUCTS_TAG, id: arg }],
     }),
     deleteProduct: builder.mutation<boolean, number>({
       query: id => ({
         url: `${PRODUCTS_PATH}/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [PRODUCTS_TAG],
+      invalidatesTags: [{ type: PRODUCTS_TAG, id: 'LIST' }],
     }),
     createProduct: builder.mutation<IProduct, IProductCreationData>({
       query: values => ({
@@ -31,7 +37,7 @@ const productsApi = createApi({
         method: 'POST',
         body: values,
       }),
-      invalidatesTags: [PRODUCTS_TAG],
+      invalidatesTags: [{ type: PRODUCTS_TAG, id: 'LIST' }],
     }),
     updateProduct: builder.mutation<IProduct, Pick<IProduct, 'id' | 'price' | 'title'>>({
       query: ({ id, ...restValues }) => ({
@@ -39,7 +45,7 @@ const productsApi = createApi({
         method: 'PUT',
         body: restValues,
       }),
-      invalidatesTags: [PRODUCTS_TAG],
+      invalidatesTags: (_result, _error, arg) => [{ type: PRODUCTS_TAG, id: arg.id }],
     }),
   }),
 });
