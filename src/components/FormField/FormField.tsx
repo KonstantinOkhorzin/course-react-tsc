@@ -1,20 +1,18 @@
 import { FC } from 'react';
 import { ErrorMessage, Field } from 'formik';
-import { TextField } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 
 import { FormError } from './FormField.styled';
 
-interface Props {
+type Props = Partial<TextFieldProps> & {
   name: string;
   label: string;
-  type?: string;
-  [key: string]: number | string | boolean | undefined;
-}
+};
 
-const FormField: FC<Props> = ({ name, label, type = 'text', ...restProps }) => {
+const FormField: FC<Props> = ({ name, label, ...restProps }) => {
   return (
     <div>
-      <Field as={TextField} name={name} label={label} type={type} {...restProps} fullWidth />
+      <Field as={TextField} name={name} label={label} {...restProps} fullWidth />
       <ErrorMessage name={name} component={FormError} />
     </div>
   );
