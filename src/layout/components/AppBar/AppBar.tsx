@@ -1,19 +1,15 @@
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const pages = [
-  { name: 'pokemon', path: '/pokemon' },
-  { name: 'clock', path: '/clock' },
-  { name: 'todos', path: '/todos' },
-  { name: 'products', path: '/products' },
-];
+import AuthNav from './components/AuthNav';
+import Navigation from './components/Navigation';
+import UserMenu from './components/UserMenu';
 
 const ResponsiveAppBar = () => {
-  const location = useLocation();
+  const isLoggedIn = false;
 
   return (
     <AppBar position='static'>
@@ -35,31 +31,10 @@ const ResponsiveAppBar = () => {
           >
             LOGO
           </Button>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            {pages.map(({ name, path }) => (
-              <Button
-                component={NavLink}
-                to={path}
-                key={name}
-                sx={{
-                  my: 2,
-                  color: 'white',
-                  fontWeight: location.pathname === path ? 700 : 'inherit',
-                  textDecoration: location.pathname === path ? 'underline' : 'none',
-                }}
-              >
-                {name}
-              </Button>
-            ))}
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button component={Link} to='register'>
-              register
-            </Button>
-            <Button component={Link} to='login'>
-              Log in
-            </Button>
-          </Box>
+
+          <Navigation />
+
+          {isLoggedIn ? <UserMenu /> : <AuthNav />}
         </Toolbar>
       </Container>
     </AppBar>
