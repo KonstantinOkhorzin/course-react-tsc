@@ -9,6 +9,8 @@ const Clock = lazy(() => import('./pages/Clock'));
 const SingleTodo = lazy(() => import('./pages/SingleTodo'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path='todos/:todoId' element={<SingleTodo />} />
         <Route path='products' element={<Products />} />
         <Route path='products/:id' element={<ProductDetails />} />
+        <Route path='login' element={<Login />} />
+        <Route path='register' element={<Register />} />
       </Route>
     </Routes>
   );

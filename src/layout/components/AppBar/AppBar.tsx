@@ -52,6 +52,14 @@ const ResponsiveAppBar = () => {
               </Button>
             ))}
           </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button component={Link} to='register'>
+              register
+            </Button>
+            <Button component={Link} to='login'>
+              Log in
+            </Button>
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
