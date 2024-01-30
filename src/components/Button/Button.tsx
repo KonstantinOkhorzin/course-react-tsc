@@ -1,22 +1,15 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, ButtonHTMLAttributes } from 'react';
 
 import { StyledButton } from './Button.styled';
 
-interface IButtonProps {
+interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: string | ReactElement;
-  type?: 'button' | 'submit';
-  disabled?: boolean;
   icon?: FC | null;
 }
 
-const Button: FC<IButtonProps> = ({
-  children,
-  type = 'button',
-  disabled = false,
-  icon: Icon = null,
-}) => {
+const Button: FC<IButtonProps> = ({ children, icon: Icon = null, ...restProps }) => {
   return (
-    <StyledButton disabled={disabled} type={type}>
+    <StyledButton {...restProps}>
       {children}
       {Icon && <Icon />}
     </StyledButton>
