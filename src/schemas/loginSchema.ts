@@ -1,4 +1,4 @@
-import { object, string, InferType } from 'yup';
+import { object, string } from 'yup';
 
 export const loginSchema = object({
   email: string().email().required(),
@@ -10,5 +10,3 @@ export const loginSchema = object({
     .matches(/[!@#$%^&*()]/, 'Password must contain at least one special character')
     .required('Please enter password'),
 });
-
-export type loginType = InferType<typeof loginSchema>;

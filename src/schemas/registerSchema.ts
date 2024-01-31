@@ -1,4 +1,4 @@
-import { object, string, ref, InferType } from 'yup';
+import { object, string, ref } from 'yup';
 
 import { loginSchema } from './loginSchema';
 
@@ -10,5 +10,3 @@ export const registerSchema = loginSchema.concat(
       .required('Please confirm password'),
   })
 );
-
-export type registerType = InferType<typeof registerSchema>;

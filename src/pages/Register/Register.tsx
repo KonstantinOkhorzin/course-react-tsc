@@ -1,8 +1,11 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-import { registerSchema, registerType } from '../../schemas/registerSchema';
+import { registerSchema } from '../../schemas/registerSchema';
 import FormField from '../../components/FormField';
+import { IRegistrationWithConfirm } from '../../types';
+import { useAppDispatch } from '../../redux/hooks';
+import { signUpThunk } from '../../redux/auth/slice';
 
 const initialValues = {
   name: '',
@@ -12,8 +15,15 @@ const initialValues = {
 };
 
 const Register = () => {
-  const onFormSubmit = (values: registerType, actions: FormikHelpers<registerType>) => {
-    console.log(values);
+  const dispatch = useAppDispatch();
+
+  const onFormSubmit = (
+    values: IRegistrationWithConfirm,
+    actions: FormikHelpers<IRegistrationWithConfirm>
+  ) => {
+    const { name, email, password } = values;
+
+    dispatch(signUpThunk({ name, email, password }));
 
     actions.resetForm();
   };

@@ -58,3 +58,22 @@ export interface IProductCreationData
   extends Pick<IProduct, 'title' | 'price' | 'description' | 'images'> {
   categoryId: number;
 }
+
+export interface IUserRegistration {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface IRegistrationWithConfirm extends IUserRegistration {
+  confirmPassword: string;
+}
+
+export type UserLoginType = Omit<IUserRegistration, 'name'>;
+
+export type UserCredentialsType = Omit<IUserRegistration, 'password'>;
+
+export interface IAuthResponse {
+  user: UserCredentialsType;
+  token: string;
+}

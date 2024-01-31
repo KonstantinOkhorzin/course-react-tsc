@@ -1,8 +1,11 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-import { loginSchema, loginType } from '../../schemas/loginSchema';
+import { loginSchema } from '../../schemas/loginSchema';
 import FormField from '../../components/FormField';
+import { UserLoginType } from '../../types';
+import { useAppDispatch } from '../../redux/hooks';
+import { logInThunk } from '../../redux/auth/slice';
 
 const initialValues = {
   email: '',
@@ -10,8 +13,10 @@ const initialValues = {
 };
 
 const Login = () => {
-  const onFormSubmit = (values: loginType, actions: FormikHelpers<loginType>) => {
-    console.log(values);
+  const dispatch = useAppDispatch();
+
+  const onFormSubmit = (values: UserLoginType, actions: FormikHelpers<UserLoginType>) => {
+    dispatch(logInThunk(values));
 
     actions.resetForm();
   };
