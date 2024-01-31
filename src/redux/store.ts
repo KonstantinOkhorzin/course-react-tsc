@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 import todos from './todos/slice';
 import pokemon from './pokemon/slice';
@@ -6,7 +7,7 @@ import pokemonApi from './pokemon/api';
 import productsApi from './products';
 import auth from './auth/slice';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     todos,
     pokemon,
@@ -15,9 +16,13 @@ const store = configureStore({
     auth,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(productsApi.middleware, pokemonApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(productsApi.middleware, pokemonApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
 
-export default store;
+export const persistor = persistStore(store);

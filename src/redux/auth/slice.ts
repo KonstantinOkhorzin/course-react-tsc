@@ -1,4 +1,6 @@
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 import { signUp, logIn, logOut } from '../../services/tasks';
 import { IUserRegistration, UserLoginType, UserCredentialsType } from '../../types';
@@ -114,7 +116,19 @@ const slice = createSlice({
   },
 });
 
+const persistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token'],
+};
+
+const persistedAuth = persistReducer(persistConfig, slice.reducer);
+
 export const { logInThunk, signUpThunk, logOutThunk } = slice.actions;
 export const { selectIsLoggedIn } = slice.selectors;
 
-export default slice.reducer;
+export default persistedAuth;
+
+
+
+
