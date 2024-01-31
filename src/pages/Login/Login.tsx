@@ -16,7 +16,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
 
   const onFormSubmit = (values: UserLoginType, actions: FormikHelpers<UserLoginType>) => {
-    dispatch(logInThunk(values));
+    dispatch(logInThunk(values)).then(console.log);
 
     actions.resetForm();
   };

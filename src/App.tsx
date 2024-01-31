@@ -1,7 +1,11 @@
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Layout from './layout';
+import { useAppDispatch } from './redux/hooks';
+import { refreshUserThunk, selectIsRefreshing } from './redux/auth/slice';
+
 const Home = lazy(() => import('./pages/Home'));
 const Pokemon = lazy(() => import('./pages/Pokemon'));
 const Todos = lazy(() => import('./pages/Todos'));
@@ -13,7 +17,16 @@ const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 
 function App() {
-  return (
+  const dispatch = useAppDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+
+  useEffect(() => {
+    dispatch(refreshUserThunk());
+  }, [dispatch]);
+
+  return isRefreshing ? (
+    <b>Refreshing user...</b>
+  ) : (
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />

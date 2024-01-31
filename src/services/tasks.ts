@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IAuthResponse, IUserRegistration, UserLoginType } from '../types';
+import { IAuthResponse, IUserRegistration, UserCredentialsType, UserLoginType } from '../types';
 
 const instance = axios.create({
   baseURL: 'https://goit-task-manager.herokuapp.com/',
@@ -48,4 +48,9 @@ export const logIn = async (credentials: UserLoginType) => {
 export const logOut = async () => {
   await instance.post('/users/logout');
   clearAuthHeader();
+};
+
+export const refreshUser = async (persistedToken: string) => {
+  setAuthHeader(persistedToken);
+  return (await instance.get<UserCredentialsType>('/users/me')).data;
 };
