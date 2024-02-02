@@ -1,12 +1,12 @@
 import { lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import Layout from './layout';
 import { useAppDispatch } from './redux/hooks';
-import { refreshUserThunk, selectIsRefreshing } from './redux/auth/slice';
+import { refreshUserThunk } from './redux/auth/slice';
 import RestrictedRoute from './components/RestrictedRoute';
 import PrivateRoute from './components/PrivateRoute';
+import  {useAuth}  from './hooks';
 
 const Home = lazy(() => import('./pages/Home'));
 const Pokemon = lazy(() => import('./pages/Pokemon'));
@@ -20,7 +20,7 @@ const Register = lazy(() => import('./pages/Register'));
 
 function App() {
   const dispatch = useAppDispatch();
-  const isRefreshing = useSelector(selectIsRefreshing);
+  const {isRefreshing} = useAuth();
 
   useEffect(() => {
     dispatch(refreshUserThunk());

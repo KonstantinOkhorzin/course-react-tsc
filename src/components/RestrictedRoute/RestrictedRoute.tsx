@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { selectIsLoggedIn } from '../../redux/auth/slice';
+import { useAuth } from '../../hooks';
 
 interface Props {
   component: FC;
@@ -10,8 +9,8 @@ interface Props {
 }
 
 const RestrictedRoute: FC<Props> = ({ component: Component, redirectTo = '/' }) => {
-  const isLoggedIn = useSelector(selectIsLoggedIn);
   const { state } = useLocation();
+  const { isLoggedIn } = useAuth();
 
   return isLoggedIn ? <Navigate to={state ? state.from : redirectTo} /> : <Component />;
 };

@@ -3,16 +3,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import AuthNav from './components/AuthNav';
 import Navigation from './components/Navigation';
 import UserMenu from './components/UserMenu';
-import { selectIsLoggedIn } from '../../../redux/auth/slice';
-
+import { useAuth } from '../../../hooks';
 
 const ResponsiveAppBar = () => {
-  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const { isLoggedIn } = useAuth();
 
   return (
     <AppBar position='static'>

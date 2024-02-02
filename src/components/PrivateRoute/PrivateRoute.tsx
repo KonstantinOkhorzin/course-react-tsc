@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { selectIsLoggedIn, selectIsRefreshing } from '../../redux/auth/slice';
+import { useAuth } from '../../hooks';
 
 interface Props {
   component: FC;
@@ -11,8 +10,7 @@ interface Props {
 
 export const PrivateRoute: FC<Props> = ({ component: Component, redirectTo = '/' }) => {
   const location = useLocation();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const isRefreshing = useSelector(selectIsRefreshing);
+  const { isLoggedIn, isRefreshing } = useAuth();
   const shouldRedirect = !isLoggedIn && !isRefreshing;
 
   return shouldRedirect ? <Navigate to={redirectTo} state={{ from: location }} /> : <Component />;
