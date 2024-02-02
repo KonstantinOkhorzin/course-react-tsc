@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import Layout from './layout';
 import { useAppDispatch } from './redux/hooks';
 import { refreshUserThunk, selectIsRefreshing } from './redux/auth/slice';
+import RestrictedRoute from './components/RestrictedRoute';
+import PrivateRoute from './components/PrivateRoute';
 
 const Home = lazy(() => import('./pages/Home'));
 const Pokemon = lazy(() => import('./pages/Pokemon'));
@@ -32,12 +34,15 @@ function App() {
         <Route index element={<Home />} />
         <Route path='pokemon' element={<Pokemon />} />
         <Route path='clock' element={<Clock />} />
-        <Route path='todos' element={<Todos />} />
-        <Route path='todos/:todoId' element={<SingleTodo />} />
+        <Route path='todos' element={<PrivateRoute component={Todos} redirectTo='/login' />} />
+        <Route
+          path='todos/:todoId'
+          element={<PrivateRoute component={SingleTodo} redirectTo='/login' />}
+        />
         <Route path='products' element={<Products />} />
         <Route path='products/:id' element={<ProductDetails />} />
-        <Route path='login' element={<Login />} />
-        <Route path='register' element={<Register />} />
+        <Route path='login' element={<RestrictedRoute component={Login} />} />
+        <Route path='register' element={<RestrictedRoute component={Register} />} />
       </Route>
     </Routes>
   );
