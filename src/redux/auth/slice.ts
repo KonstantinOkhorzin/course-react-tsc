@@ -1,23 +1,8 @@
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
 
 import { signUp, logIn, logOut, refreshUser } from '../../services/auth';
-import { IUserRegistration, UserLoginType, UserCredentialsType } from '../../types';
-
-interface InitialState {
-  user: UserCredentialsType;
-  isLoggedIn: boolean;
-  loading: boolean;
-  error: null | string;
-  isRefreshing: boolean;
-}
-
-const initialState: InitialState = {
-  user: { name: '', email: '' },
-  isLoggedIn: false,
-  isRefreshing: false,
-  loading: false,
-  error: null,
-};
+import { IUserRegistration, UserLoginType} from '../../types';
+import { initialState } from './initialState';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
