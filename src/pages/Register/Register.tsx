@@ -23,7 +23,9 @@ const Register = () => {
   ) => {
     const { name, email, password } = values;
 
-    dispatch(signUpThunk({ name, email, password }));
+    dispatch(signUpThunk({ name, email, password }))
+      .unwrap()
+      .then(data => window.localStorage.setItem('token', data.token));
 
     actions.resetForm();
   };

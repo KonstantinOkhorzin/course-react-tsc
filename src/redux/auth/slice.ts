@@ -1,13 +1,11 @@
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
 import { signUp, logIn, logOut, refreshUser } from '../../services/tasks';
 import { IUserRegistration, UserLoginType, UserCredentialsType } from '../../types';
 
 interface InitialState {
   user: UserCredentialsType;
-  token: string | null;
+  isLoggedIn: boolean;
   loading: boolean;
   error: null | string;
   isRefreshing: boolean;
@@ -15,7 +13,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   user: { name: '', email: '' },
-  token: null,
+  isLoggedIn: false,
   isRefreshing: false,
   loading: false,
   error: null,
@@ -48,7 +46,7 @@ const slice = createSlice({
         },
         fulfilled: (state, { payload }) => {
           state.user = payload.user;
-          state.token = payload.token;
+          state.isLoggedIn = true;
           state.error = null;
         },
         settled: state => {
@@ -75,7 +73,7 @@ const slice = createSlice({
         },
         fulfilled: (state, { payload }) => {
           state.user = payload.user;
-          state.token = payload.token;
+          state.isLoggedIn = true;
           state.error = null;
         },
         settled: state => {
@@ -102,7 +100,7 @@ const slice = createSlice({
         },
         fulfilled: state => {
           state.user = initialState.user;
-          state.token = initialState.token;
+          state.isLoggedIn = initialState.isLoggedIn;
           state.error = null;
         },
         settled: state => {
@@ -112,22 +110,15 @@ const slice = createSlice({
     ),
     refreshUserThunk: create.asyncThunk(
       async (_: void, thunkApi) => {
-        const state = thunkApi.getState(); //const state: unknown !!!!!!!!!!!
-        const { token } = state.auth;
-
-        if (token === null) {
-          return thunkApi.rejectWithValue('Unable to fetch user');
-        }
-
         try {
-          return await refreshUser(token);
+          return await refreshUser();
         } catch (error) {
           return thunkApi.rejectWithValue(error);
         }
       },
       {
         pending: state => {
-          state.loading = true;
+          state.isRefreshing = true;
         },
         rejected: (state, { payload }) => {
           if (typeof payload === 'string') {
@@ -136,29 +127,22 @@ const slice = createSlice({
         },
         fulfilled: (state, { payload }) => {
           state.user = payload;
+          state.isLoggedIn = true;
           state.error = null;
         },
         settled: state => {
-          state.loading = false;
+          state.isRefreshing = false;
         },
       }
     ),
   }),
   selectors: {
-    selectIsLoggedIn: state => Boolean(state.token),
+    selectIsLoggedIn: state => state.isLoggedIn,
     selectIsRefreshing: state => state.isRefreshing,
   },
 });
 
-const persistConfig = {
-  key: 'auth',
-  storage,
-  whitelist: ['token'],
-};
-
-const persistedAuth = persistReducer(persistConfig, slice.reducer);
-
 export const { logInThunk, signUpThunk, logOutThunk, refreshUserThunk } = slice.actions;
 export const { selectIsLoggedIn, selectIsRefreshing } = slice.selectors;
 
-export default persistedAuth;
+export default slice.reducer;

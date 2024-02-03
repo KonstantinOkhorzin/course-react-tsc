@@ -6,7 +6,7 @@ import { useAppDispatch } from './redux/hooks';
 import { refreshUserThunk } from './redux/auth/slice';
 import RestrictedRoute from './components/RestrictedRoute';
 import PrivateRoute from './components/PrivateRoute';
-import  {useAuth}  from './hooks';
+import { useAuth } from './hooks';
 
 const Home = lazy(() => import('./pages/Home'));
 const Pokemon = lazy(() => import('./pages/Pokemon'));
@@ -20,10 +20,12 @@ const Register = lazy(() => import('./pages/Register'));
 
 function App() {
   const dispatch = useAppDispatch();
-  const {isRefreshing} = useAuth();
+  const { isRefreshing } = useAuth();
 
   useEffect(() => {
-    dispatch(refreshUserThunk());
+    if (window.localStorage.getItem('token')) {
+      dispatch(refreshUserThunk());
+    }
   }, [dispatch]);
 
   return isRefreshing ? (

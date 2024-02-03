@@ -22,42 +22,26 @@ instance.interceptors.response.use(
   }
 );
 
-// instance.interceptors.request.use(config => {
-//   const token: string | null = window.localStorage.getItem('token');
-//   config.headers.Authorization = token ? `Bearer ${token}` : '';
+instance.interceptors.request.use(config => {
+  const token: string | null = window.localStorage.getItem('token');
+  config.headers.Authorization = token ? `Bearer ${token}` : '';
 
-//   return config;
-// });
-
-const setAuthHeader = (token: string) => {
-  instance.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-const clearAuthHeader = () => {
-  instance.defaults.headers.common.Authorization = '';
-};
+  return config;
+});
 
 export const signUp = async (credentials: IUserRegistration) => {
-  const { data } = await instance.post<IAuthResponse>('users/signup', credentials);
-  setAuthHeader(data.token);
-
-  return data;
+  return (await instance.post<IAuthResponse>('users/signup', credentials)).data;
 };
 
 export const logIn = async (credentials: UserLoginType) => {
-  const { data } = await instance.post<IAuthResponse>('users/login', credentials);
-  setAuthHeader(data.token);
-
-  return data;
+  return (await instance.post<IAuthResponse>('users/login', credentials)).data;
 };
 
 export const logOut = async () => {
   await instance.post('users/logout');
-  clearAuthHeader();
 };
 
-export const refreshUser = async (persistedToken: string) => {
-  setAuthHeader(persistedToken);
+export const refreshUser = async () => {
   return (await instance.get<UserCredentialsType>('users/me')).data;
 };
 

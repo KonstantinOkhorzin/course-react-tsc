@@ -5,11 +5,10 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import ContextProvider from './context';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 
 import App from './App.tsx';
 import { theme, globalStyles, muiTheme } from './styles';
-import { store, persistor } from './redux/store';
+import store from './redux/store';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -18,9 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <BrowserRouter>
           <ContextProvider>
             <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <App />
-              </PersistGate>
+              <App />
             </Provider>
           </ContextProvider>
         </BrowserRouter>

@@ -1,4 +1,4 @@
-import { Box} from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useAppDispatch } from '../../../../../redux/hooks';
 import { logOutThunk } from '../../../../../redux/auth/slice';
@@ -8,7 +8,9 @@ const UserMenu = () => {
   const dispatch = useAppDispatch();
 
   const onLogoutClick = () => {
-    dispatch(logOutThunk());
+    dispatch(logOutThunk())
+      .unwrap()
+      .then(() => window.localStorage.removeItem('token'));
   };
 
   return (
