@@ -1,6 +1,6 @@
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
 
-import { signUp, logIn, logOut, refreshUser } from '../../services/tasks';
+import { signUp, logIn, logOut, refreshUser } from '../../services/auth';
 import { IUserRegistration, UserLoginType, UserCredentialsType } from '../../types';
 
 interface InitialState {
