@@ -3,23 +3,8 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { signUp, logIn, logOut, refreshUser } from '../../services/tasks';
-import { IUserRegistration, UserLoginType, UserCredentialsType } from '../../types';
-
-interface InitialState {
-  user: UserCredentialsType;
-  token: string | null;
-  loading: boolean;
-  error: null | string;
-  isRefreshing: boolean;
-}
-
-const initialState: InitialState = {
-  user: { name: '', email: '' },
-  token: null,
-  isRefreshing: false,
-  loading: false,
-  error: null,
-};
+import { IUserRegistration, UserLoginType } from '../../types';
+import { initialState } from './initialState';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
