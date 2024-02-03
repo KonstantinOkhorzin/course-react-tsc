@@ -1,8 +1,8 @@
 import { useState, FormEvent, ChangeEvent, FC } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import { useDispatch } from 'react-redux';
 
-import { addTodo } from '../../../redux/todos/slice';
+import { useAppDispatch } from '../../../redux/hooks';
+import { createTaskThunk } from '../../../redux/tasks/slice';
 
 interface Props {
   onCloseModal: () => void;
@@ -10,11 +10,11 @@ interface Props {
 
 const AddForm: FC<Props> = ({ onCloseModal }) => {
   const [text, setText] = useState<string>('');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(addTodo(text));
+    dispatch(createTaskThunk(text));
     setText('');
     onCloseModal();
   };

@@ -1,27 +1,31 @@
-import { useState, ChangeEvent, useMemo} from 'react';
+import { useState, ChangeEvent, useMemo, useEffect } from 'react';
 import { SelectChangeEvent, IconButton, Typography } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import { selectTodos } from '../../redux/todos/slice';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
 import Filter from './Filter';
 import Sort from './Sort';
 import Modal from '../../components/Modal';
-
 import { Container } from './Todos.styled';
 
-import { ITodo } from '../../types';
+import { ITask } from '../../types';
+import { getAllTasksThunk, selectTodos } from '../../redux/tasks/slice';
+import { useAppDispatch } from '../../redux/hooks';
 
 const Todos = () => {
+  const dispatch = useAppDispatch();
   const todos = useSelector(selectTodos);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
   const { filter = '', sort = '' } = params;
+
+  useEffect(() => {
+    dispatch(getAllTasksThunk());
+  }, [dispatch]);
 
   const onToggleModal = () => {
     setShowModal(state => !state);
@@ -46,7 +50,7 @@ const Todos = () => {
     return todos.filter(todo => todo.text.toLowerCase().includes(normalizedFilter));
   }, [filter, todos]);
 
-  const calculateCompletedTodos = (todos: ITodo[]) =>
+  const calculateCompletedTodos = (todos: ITask[]) =>
     todos.reduce((total, todo) => (todo.completed ? (total += 1) : total), 0);
 
   const selectChange = (e: SelectChangeEvent) => {

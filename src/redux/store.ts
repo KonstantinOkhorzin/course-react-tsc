@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
-import todos from './todos/slice';
+import tasks from './tasks/slice';
 import pokemon from './pokemon/slice';
 import pokemonApi from './pokemon/api';
 import productsApi from './products';
@@ -9,7 +9,7 @@ import auth from './auth/slice';
 
 export const store = configureStore({
   reducer: {
-    todos,
+    tasks,
     pokemon,
     [pokemonApi.reducerPath]: pokemonApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,

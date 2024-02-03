@@ -77,3 +77,10 @@ export interface IAuthResponse {
   user: UserCredentialsType;
   token: string;
 }
+
+export interface ITask {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: string;
+}
