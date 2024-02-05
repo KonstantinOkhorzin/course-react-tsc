@@ -1,8 +1,7 @@
-import { useState, ChangeEvent, useMemo, useEffect } from 'react';
+import { useState, ChangeEvent, useMemo } from 'react';
 import { SelectChangeEvent, IconButton, Typography } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import AddForm from './AddForm';
 import TodoList from './TodoList';
@@ -12,20 +11,14 @@ import Modal from '../../components/Modal';
 import { Container } from './Todos.styled';
 
 import { ITask } from '../../types';
-import { getAllTasksThunk, selectTodos } from '../../redux/tasks/slice';
-import { useAppDispatch } from '../../redux/hooks';
+import { useGetAllTasksQuery } from '../../redux/tasks/api';
 
 const Todos = () => {
-  const dispatch = useAppDispatch();
-  const todos = useSelector(selectTodos);
+  const { currentData: todos = [] } = useGetAllTasksQuery();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
   const { filter = '', sort = '' } = params;
-
-  useEffect(() => {
-    dispatch(getAllTasksThunk());
-  }, [dispatch]);
 
   const onToggleModal = () => {
     setShowModal(state => !state);

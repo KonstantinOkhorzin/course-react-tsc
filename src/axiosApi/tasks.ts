@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const tasksInstance = axios.create({
-  baseURL: 'https://goit-task-manager.herokuapp.com/',
+  baseURL: import.meta.env.VITE_TASK_MANAGER_BASE_URL,
 });
 
 tasksInstance.interceptors.request.use(config => {
@@ -11,15 +11,15 @@ tasksInstance.interceptors.request.use(config => {
   return config;
 });
 
-tasksInstance.interceptors.response.use(
-  response => response,
-  error => {
-    if (axios.isAxiosError(error)) {
-      return Promise.reject(error.message);
-    } else {
-      return Promise.reject('Failed to fetch data! Try again!');
-    }
-  }
-);
+// tasksInstance.interceptors.response.use(
+//   response => response,
+//   error => {
+//     if (axios.isAxiosError(error)) {
+//       return Promise.reject(error.message);
+//     } else {
+//       return Promise.reject('Failed to fetch data! Try again!');
+//     }
+//   }
+// );
 
 export default tasksInstance;

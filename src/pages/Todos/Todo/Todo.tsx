@@ -5,19 +5,15 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { Wrapper } from './Todo.styled';
 import { ITask } from '../../../types';
-import { useAppDispatch } from '../../../redux/hooks';
-import { deleteTaskThunk, toggleCompletedThunk } from '../../../redux/tasks/slice';
+import { useDeleteTaskMutation, useToggleCompletedMutation } from '../../../redux/tasks/api';
 
 const Todo: FC<ITask> = ({ id, text, completed }) => {
   const location = useLocation();
-  const dispatch = useAppDispatch();
-
-  const onDeleteTask = (id: string) => {
-    dispatch(deleteTaskThunk(id));
-  };
+  const [toggleCompleted] = useToggleCompletedMutation();
+  const [deleteTask] = useDeleteTaskMutation();
 
   const onToggleComleted = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(toggleCompletedThunk({ id, completed: e.target.checked }));
+    toggleCompleted({ id, completed: e.target.checked });
   };
 
   return (
@@ -26,7 +22,7 @@ const Todo: FC<ITask> = ({ id, text, completed }) => {
       <Button component={Link} to={`${id}`} state={{ from: location }}>
         {text}
       </Button>
-      <IconButton color='error' aria-label='delete' onClick={() => onDeleteTask(id)}>
+      <IconButton color='error' aria-label='delete' onClick={() => deleteTask(id)}>
         <DeleteIcon />
       </IconButton>
     </Wrapper>
