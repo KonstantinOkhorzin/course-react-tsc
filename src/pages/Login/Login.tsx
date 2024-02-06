@@ -5,7 +5,8 @@ import { loginSchema } from '../../schemas/loginSchema';
 import FormField from '../../components/FormField';
 import { UserLoginType } from '../../types';
 import { useAppDispatch } from '../../redux/hooks';
-import { logInThunk } from '../../redux/auth/slice';
+import { setUserCredentials } from '../../redux/auth/slice';
+import { useLogInMutation } from '../../redux/auth/api';
 
 const initialValues = {
   email: '',
@@ -14,11 +15,15 @@ const initialValues = {
 
 const Login = () => {
   const dispatch = useAppDispatch();
+  const [logIn] = useLogInMutation();
 
   const onFormSubmit = (values: UserLoginType, actions: FormikHelpers<UserLoginType>) => {
-    dispatch(logInThunk(values))
+    logIn(values)
       .unwrap()
-      .then(data => window.localStorage.setItem('token', data.token));
+      .then(data => {
+        dispatch(setUserCredentials(data.user));
+        window.localStorage.setItem('token', data.token);
+      });
 
     actions.resetForm();
   };

@@ -5,6 +5,7 @@ import pokemon from './pokemon/slice';
 import pokemonApi from './pokemon/api';
 import productsApi from './products';
 import auth from './auth/slice';
+import authApi from './auth/api';
 
 const store = configureStore({
   reducer: {
@@ -12,13 +13,15 @@ const store = configureStore({
     [pokemonApi.reducerPath]: pokemonApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [tasksApi.reducerPath]: tasksApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
     auth,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(
       productsApi.middleware,
       pokemonApi.middleware,
-      tasksApi.middleware
+      tasksApi.middleware,
+      authApi.middleware
     ),
 });
 

@@ -10,10 +10,9 @@ interface Props {
 
 export const PrivateRoute: FC<Props> = ({ component: Component, redirectTo = '/' }) => {
   const location = useLocation();
-  const { isLoggedIn, isRefreshing } = useAuth();
-  const shouldRedirect = !isLoggedIn && !isRefreshing;
+  const { isLoggedIn } = useAuth();
 
-  return shouldRedirect ? <Navigate to={redirectTo} state={{ from: location }} /> : <Component />;
+  return isLoggedIn ? <Component /> : <Navigate to={redirectTo} state={{ from: location }} />;
 };
 
 export default PrivateRoute;

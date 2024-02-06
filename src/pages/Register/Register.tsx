@@ -5,7 +5,8 @@ import { registerSchema } from '../../schemas/registerSchema';
 import FormField from '../../components/FormField';
 import { IRegistrationWithConfirm } from '../../types';
 import { useAppDispatch } from '../../redux/hooks';
-import { signUpThunk } from '../../redux/auth/slice';
+import { useSignUpMutation } from '../../redux/auth/api';
+import { setUserCredentials } from '../../redux/auth/slice';
 
 const initialValues = {
   name: '',
@@ -16,6 +17,7 @@ const initialValues = {
 
 const Register = () => {
   const dispatch = useAppDispatch();
+  const [signUp] = useSignUpMutation();
 
   const onFormSubmit = (
     values: IRegistrationWithConfirm,
@@ -23,9 +25,12 @@ const Register = () => {
   ) => {
     const { name, email, password } = values;
 
-    dispatch(signUpThunk({ name, email, password }))
+    signUp({ name, email, password })
       .unwrap()
-      .then(data => window.localStorage.setItem('token', data.token));
+      .then(data => {
+        dispatch(setUserCredentials(data.user));
+        window.localStorage.setItem('token', data.token);
+      });
 
     actions.resetForm();
   };

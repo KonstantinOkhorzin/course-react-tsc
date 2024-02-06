@@ -3,10 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 
 import Layout from './layout';
 import { useAppDispatch } from './redux/hooks';
-import { refreshUserThunk } from './redux/auth/slice';
 import RestrictedRoute from './components/RestrictedRoute';
 import PrivateRoute from './components/PrivateRoute';
-import { useAuth } from './hooks';
+import { useRefreshUserQuery } from './redux/auth/api';
+import { setUserCredentials } from './redux/auth/slice';
 
 const Home = lazy(() => import('./pages/Home'));
 const Pokemon = lazy(() => import('./pages/Pokemon'));
@@ -20,15 +20,19 @@ const Register = lazy(() => import('./pages/Register'));
 
 function App() {
   const dispatch = useAppDispatch();
-  const { isRefreshing } = useAuth();
+  const hasToken = Boolean(window.localStorage.getItem('token'));
+
+  const { data, isLoading } = useRefreshUserQuery(undefined, {
+    skip: !hasToken,
+  });
 
   useEffect(() => {
-    if (window.localStorage.getItem('token')) {
-      dispatch(refreshUserThunk());
+    if (data) {
+      dispatch(setUserCredentials(data));
     }
-  }, [dispatch]);
+  }, [data, dispatch]);
 
-  return isRefreshing ? (
+  return isLoading ? (
     <b>Refreshing user...</b>
   ) : (
     <Routes>
