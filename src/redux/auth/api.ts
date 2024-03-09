@@ -4,8 +4,8 @@ import { IAuthResponse, IUserRegistration, UserCredentialsType, UserLoginType } 
 import axiosBaseQuery from '../axiosBaseQuery';
 import tasksInstance from '../../axiosApi/tasks';
 
-const ENDPOINT_REFRESH_USER = 'users/me';
-const ENDPOINT_SIGN_UP = 'users/signup';
+const ENDPOINT_REFRESH_USER = 'users/current';
+const ENDPOINT_SIGN_UP = 'users/register';
 const ENDPOINT_LOG_IN = 'users/login';
 const ENDPOINT_LOG_OUT = 'users/logout';
 

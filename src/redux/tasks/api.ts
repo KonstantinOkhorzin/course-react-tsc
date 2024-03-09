@@ -20,7 +20,7 @@ const tasksApi = createApi({
       providesTags: result =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'Tasks' as const, id })),
+              ...result.map(({ _id: id }) => ({ type: 'Tasks' as const, id })),
               { type: TASKS_TAG, id: 'LIST' },
             ]
           : [{ type: TASKS_TAG, id: 'LIST' }],
@@ -40,13 +40,13 @@ const tasksApi = createApi({
       }),
       invalidatesTags: [{ type: TASKS_TAG, id: 'LIST' }],
     }),
-    toggleCompleted: builder.mutation<ITask, Pick<ITask, 'id' | 'completed'>>({
-      query: ({ id, completed }) => ({
-        url: `${TASKS_PATH}/${id}`,
+    toggleCompleted: builder.mutation<ITask, Pick<ITask, '_id' | 'completed'>>({
+      query: ({ _id, completed }) => ({
+        url: `${TASKS_PATH}/${_id}/completed`,
         method: 'PATCH',
         data: { completed },
       }),
-      invalidatesTags: (_result, _error, arg) => [{ type: TASKS_TAG, id: arg.id }],
+      invalidatesTags: (_result, _error, arg) => [{ type: TASKS_TAG, id: arg._id }],
     }),
   }),
 });

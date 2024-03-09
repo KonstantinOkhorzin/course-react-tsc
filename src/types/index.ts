@@ -79,8 +79,7 @@ export interface IAuthResponse {
 }
 
 export interface ITask {
-  id: string;
+  _id: string;
   text: string;
   completed: boolean;
-  createdAt: string;
 }

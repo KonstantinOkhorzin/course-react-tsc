@@ -7,22 +7,22 @@ import { Wrapper } from './Todo.styled';
 import { ITask } from '../../../types';
 import { useDeleteTaskMutation, useToggleCompletedMutation } from '../../../redux/tasks/api';
 
-const Todo: FC<ITask> = ({ id, text, completed }) => {
+const Todo: FC<ITask> = ({ _id, text, completed }) => {
   const location = useLocation();
   const [toggleCompleted] = useToggleCompletedMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
-  const onToggleComleted = (e: ChangeEvent<HTMLInputElement>) => {
-    toggleCompleted({ id, completed: e.target.checked });
+  const onToggleCompleted = (e: ChangeEvent<HTMLInputElement>) => {
+    toggleCompleted({ _id, completed: e.target.checked });
   };
 
   return (
     <Wrapper completed={completed}>
-      <Checkbox checked={completed} onChange={onToggleComleted} />
-      <Button component={Link} to={`${id}`} state={{ from: location }}>
+      <Checkbox checked={completed} onChange={onToggleCompleted} />
+      <Button component={Link} to={`${_id}`} state={{ from: location }}>
         {text}
       </Button>
-      <IconButton color='error' aria-label='delete' onClick={() => deleteTask(id)}>
+      <IconButton color='error' aria-label='delete' onClick={() => deleteTask(_id)}>
         <DeleteIcon />
       </IconButton>
     </Wrapper>

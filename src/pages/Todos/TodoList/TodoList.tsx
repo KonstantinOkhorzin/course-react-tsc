@@ -1,22 +1,19 @@
 import { FC } from 'react';
 
 import Todo from '../Todo';
-import { ITodo } from '../../../types';
+import { ITask } from '../../../types';
 
 import { List } from './TodoList.styled';
 
 interface ITodoListProps {
-  todos: ITodo[];
+  todos: ITask[];
 }
 
-const TodoList: FC<ITodoListProps> = ({ todos}) => {
+const TodoList: FC<ITodoListProps> = ({ todos }) => {
   return (
     <List>
       {todos.map(todo => (
-        <Todo
-          key={todo.id}
-          {...todo}
-        />
+        <Todo key={todo._id} {...todo} />
       ))}
     </List>
   );
